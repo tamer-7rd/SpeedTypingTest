@@ -1,0 +1,28 @@
+<body>
+<footer>
+    <div class="footer">
+        <div class="footer-left">
+                  <a class="company_link" href="{{url_for('about')}}">© 2025 "7rdLab"</a>
+        </div>
+        <div class="footer-right">
+            <div class="footer-links">
+                <a class="policy" href="#">Privacy Policy</a>
+                <a class="service" href="#">Terms of Service</a>
+                <a class="{% if request.path == '/contact' %}active{% endif %} contact" href="{{url_for('contact')}}">Contact</a>
+            </div>
+            <div class="socialmedia">
+                <button> 
+                    <img src="../static/assets/icons/facebook.svg" alt="Facebook" width="32" height="32"> 
+                </button>
+                <button>
+                    <img src="../static/assets/icons/instagram.svg" alt="Instagram" width="32" height="32"> 
+                </button>
+                <button>
+                    <img src="../static/assets/icons/linkedin.svg" alt="Linkedin" width="32" height="32">  
+                </button>
+            </div>
+       </div>
+    </div>
+</footer>
+
+</body>

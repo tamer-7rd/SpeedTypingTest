@@ -1,0 +1,432 @@
+
+/* Home page */
+
+
+/* Main text */
+
+.cutive-mono-regular {
+  font-family: "Cutive Mono", monospace;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 60px;
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+
+/* Secondary text */
+
+.kode-mono-secondary {
+  font-family: "Kode Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 1rem;
+  font-style: normal;
+  text-transform: uppercase;
+  color: #4a4a56;
+  margin-bottom: 10px;
+}
+
+
+
+.main-box {
+  text-align: center;
+  background-color: #f6f6f7;
+  padding: 50px;
+}
+
+
+
+.button1 {
+  border-radius: 50%;
+  background-color: white;
+  border: 4px solid #ffd000;
+  color: black;
+  padding: 26px 26px;
+  text-align: center;
+  text-decoration: none;
+  margin: 20px;
+}
+
+.button2 {
+  border-radius: 50%;
+  background-color: white;
+  border: 4px solid #ffd000;
+  color: black;
+  padding: 26px 26px;
+  text-align: center;
+  text-decoration: none;
+  margin: 20px;
+}
+
+.button3 {
+  border-radius: 50%;
+  background-color: white;
+  border: 4px solid #ffd000;
+  color: black;
+  padding: 26px 26px;
+  text-align: center;
+  text-decoration: none;
+  margin: 20px;
+}
+
+.seconds {
+font-size: 30px;
+}
+
+.seconds_text {
+font-size: 16px;
+font-family: "Lucida Console", "Courier New", monospace;
+}
+
+/* Style the header */
+
+.header {
+padding: 20px;
+}
+
+@media (max-width: 940px) {
+  .header {
+    flex-direction: column;
+    padding-bottom: 40px;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  #img_logo {
+    padding-bottom: 10px;
+  }
+}
+
+/* Style the header links */
+.header a {
+  color: black;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 25px;
+}
+
+
+.header img{
+width: 70px;
+}
+
+/* Change the background color on mouse-over */
+.header a:hover {
+  background-color: #ffd000;
+  color: black;
+}
+
+/* Style the active/current link*/
+.header a.active {
+  background-color: #ffd000;
+  color: black;
+}
+
+/* Float the link section to the right */
+.header-right {
+  float: right;
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-weight: 550;
+}
+
+
+/* Footer */
+
+.footer {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+.footer-left a{
+    color: black;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    margin-left: 10px;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-left: auto;
+    margin-right: 10px
+}
+
+.footer-links a{
+    color: black;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 12px;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+.footer-links {
+    margin-right: 20px;
+
+}
+
+@media (max-width: 940px) {
+  .footer{
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 0%;
+    margin-top: 20px;
+  }
+  .footer-right{
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    margin-left: 0%;
+  }
+}
+
+
+/* Change the background color on mouse-over */
+.footer a:hover:not(.socialmedia a){
+  background-color: #ffd000;
+  color: black;
+}
+
+/* Style the active/current link*/
+.footer a.active {
+  background-color: #ffd000;
+  color: black;
+}
+
+.socialmedia button{
+  border: none;
+  background-color: white;
+}
+
+
+
+/* Learn to Type Page */
+
+/* Learn page main text */
+
+.cutive-mono-learn{
+  font-family: "Cutive Mono", monospace;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 40px;
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+
+/* Learn page Secondary text */
+
+
+.learn-page:not(.cutive-mono-learn){
+  font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100,
+    "YTLC" 500;
+  font-size: 17px;
+  color:#4a4a56;
+
+}
+
+
+.learn-page hr {
+  height:3px;
+  border-width:0;
+  background-color:#ffd000; 
+  opacity: 1;
+  margin-bottom: 40px;
+}
+
+.learn-page h3{
+  color: black;
+}
+
+.learn-page{
+  display: grid;
+  place-items: center;
+  background-color: #f6f6f7;
+}
+
+
+.learn-page h1 {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.learn-page h2 {
+  text-align: center;
+
+}
+
+
+.learn-page-box{
+  padding: 50px;
+  max-width: 1200px;
+
+}
+
+/* Contact Page */
+
+
+.contact-page{
+  text-align: center;
+}
+
+
+
+#mail{
+  color: red;
+}
+
+
+.touch{
+  font-family: "Cutive Mono", monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-style: normal;
+  font-size: 45px;
+  font-family: "Cutive Mono", monospace;
+  margin-bottom: 8px;
+  color: black;
+  padding: 20px;
+}
+
+#sent{
+  color:coral;
+}
+
+.contact-page{
+  background-image: url(../assets/img/map.png);
+  background-size: 100% 100%;
+  background-repeat: none;
+  padding: 50px;
+}
+
+.contacts{
+  font-size: 17px;
+  color: black;
+  font-weight: 300;
+
+}
+
+input::placeholder{
+  font-size: 15px;
+}
+
+textarea::placeholder{
+  font-size: 15px;
+}
+
+.form{
+  padding: 30px;
+}
+
+.form-left{
+  margin-right: 10px;
+}
+
+#exampleFormControlInput1{
+  padding: 20px 20px;
+}
+
+.form-right{
+  margin-left: 10px;
+}
+
+.form-bottom{
+  padding-top: 30px;
+}
+ 
+
+/* About Page */
+
+.about-container{
+  background-color: #f6f6f7;
+  display: grid;
+  place-items: center;
+  background-image: url(../assets/img/background-left.webp), url(../assets/img/background-right.webp);
+  background-position: left top, right top;
+  background-repeat: no-repeat, no-repeat;
+  background-size: 300px, 300px
+}
+
+.about-box{
+  max-width: 900px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.about-box hr{
+  height:3px;
+  border-width:0;
+  background-color:#ffd000; 
+  opacity: 1;
+  margin-bottom: 40px;
+}
+
+.about-box p{
+  font-size: 17px;
+  margin-bottom: 20px;
+}
+
+#contact-us-btn{
+  margin-top: 15px;
+}
+
+#about-logo{
+  width: 350px;
+}
+
+
+/* Text Container */
+
+.container-padding {
+  padding: 50px;
+}
+
+
+.word {
+  display: inline-block; 
+  vertical-align: baseline;
+  padding: 0 .25ch .32em;   
+  font-size: 36px;
+  padding-bottom: 2px;         
+  border-bottom: 2px solid #ccc; /* цвет и толщина линии */
+}
+
+
+/* Animations */
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 1s;
+  pointer-events: none;
+}
+
+.center-absolute {
+  position: absolute;                
+  top: 50%;
+  left: 48%;
+  transform: translate(-50%, -50%);
+  z-index: 10;                      
+}
+
+@media (max-width: 936px) {
+  .center-absolute {
+    top: 70%;
+    left: 47%;
+  }
+}
+
+.no-clicking {
+  pointer-events: none;
+}
+

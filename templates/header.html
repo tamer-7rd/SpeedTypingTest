@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Bootstrap -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Typing Speed Test</title>
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Kode+Mono&family=Nunito+Sans:opsz@6..12&display=swap" rel="stylesheet">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='assets/icon.ico') }}"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <!-- My custom CSS -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+
+</head>
+<body>
+
+
+<div class="header">
+    <img src=".//static/assets/img/icon.ico" id="img_logo">
+
+    <div class="header-right">
+        <a class="{% if request.path == '/' %}active{% endif %} home" href="{{url_for('home')}}">Home</a>
+        <a class="{% if request.path == '/learn' %}active{% endif %} learn" href="{{url_for('learn')}}">Learn to type</a>
+        <a class="discord" href="https://discordapp.com/users/936957957848064000">Discord</a>
+        <a class="{% if request.path == '/about' %}active{% endif %} about" href="{{url_for('about')}}">About</a>
+    </div>
+
+</div>
+
+
