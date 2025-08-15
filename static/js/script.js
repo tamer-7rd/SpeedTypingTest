@@ -1,15 +1,20 @@
 "use strict";
 
+const buttons = document.querySelectorAll('.button');
+
+
+
 function countdown(btn) {
-  let time;
-  const value = btn.querySelector('b').textContent;
-  time = (value === '3') ? 180 : +value;
+  let time = btn.querySelector('.seconds').textContent;
+  let value = (time === '3') ? 180 : +time;
+  btn.classList.add('no-clicking')
   const timer = setInterval(() => {
     btn.querySelector('small').textContent = 'seconds';
-    btn.querySelector('b').textContent = time <= 0 ? clearInterval(timer)
-    : time--;
-  }, 1000) ;
-  btn.classList.add('no-clicking')
+    if (value <= 0) {
+      clearInterval(timer);
+    }
+    btn.querySelector('.seconds').textContent = value--;
+  }, 1000)
 }
 
 function randomTextSelector(){
@@ -39,7 +44,8 @@ function makeDiv(words) {
     wordDiv.className = 'word';
 
     for (const ch of word) {
-      const letterEl = document.createElement('letter');
+      const letterEl = document.createElement('span');
+      letterEl.className = 'letter';
       letterEl.textContent = ch;
       wordDiv.appendChild(letterEl);
     }
@@ -60,16 +66,6 @@ async function textShowing() {
 }
 
 
-
-
-
-
-
-
-
-
-const buttons = document.querySelectorAll('.button');
-
 buttons.forEach((btn) => {
   btn.addEventListener('click', () => {
     buttons.forEach((other) => {
@@ -82,3 +78,9 @@ buttons.forEach((btn) => {
     countdown(btn);
   });
 });
+
+
+
+
+
+
