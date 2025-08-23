@@ -29,6 +29,7 @@
 
 
 .main-box {
+  position: relative;
   text-align: center;
   background-color: #f6f6f7;
   padding: 50px;
@@ -386,7 +387,19 @@ textarea::placeholder{
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
 /* Text Container */
+ /* Вот тут остановился  */
 
 .container-padding {
   padding: 50px;
@@ -397,11 +410,87 @@ textarea::placeholder{
 .word {
   display: inline-block; 
   vertical-align: baseline;
-  padding: 0 .25ch .32em;   
+  /* padding: 0 .25ch .32em;    */
   font-size: 36px;
   padding-bottom: 2px;         
   border-bottom: 2px solid #ccc; /* цвет и толщина линии */
 }
+
+.space {
+  display: inline-block;
+  width: 1ch;       /* делаем пробел видимым боксом */
+  height: 1em;            /* по высоте строки */
+  line-height: inherit;
+  padding: 0;             /* лишние отступы не нужны */
+  vertical-align: baseline;
+  border-radius: 3px;     /* как у букв */
+}
+
+/* === Контейнер текста, куда прыгает инпут === */
+.text-container {
+  position: relative;      /* важно: чтобы input можно было позиционировать внутри */
+  line-height: 1.2;        /* чтобы высота bbox буквы была предсказуемой */
+  font: inherit;
+  user-select: none;       /* чтобы случайно не выделять текст во время печати */
+}
+
+/* Каждая буква — отдельный bbox */
+.letter {
+  display: inline-block;
+  height: 1em;  
+  line-height: 1em; 
+  vertical-align: middle;
+  padding: 0 .18ch;       /* лёгкий внутренний отступ, чтобы фон был виден */
+  margin: 0 .02ch;        /* микро-зазор между плитками */
+  border-radius: 3px;     /* мягкие углы, чтобы плашка выглядела аккуратно */
+}
+
+/* Сам «невидимый» инпут-оверлей */
+.typing-overlay-input{
+  position:absolute;
+  border:none;
+  outline:none;
+  background:transparent;
+  color:transparent;         /* текст невидим */
+  caret-color:transparent;   /* курсор невидим */
+  padding:0;margin:0;
+  font:inherit; line-height:inherit;
+  z-index:5;
+}
+
+/* Подсветка результата сравнения */
+.letter.correct-letter {
+  color: #1a7f37;
+  background: rgba(26,127,55,.18);    /* мягкая зелёная плашка */
+}
+
+.letter.wrong-letter {
+  color: #b42318;
+  background: rgba(180,35,24,.18);    /* мягкая красная плашка */
+}
+
+/* Пробелы: та же плашка, чтобы было видно правильность */
+.space.correct-letter { background: rgba(26,127,55,.18); }
+.space.wrong-letter   { background: rgba(180,35,24,.18); }
+
+/* Плавные переходы */
+.letter.correct-letter,
+.letter.wrong-letter,
+.space.correct-letter,
+.space.wrong-letter {
+transition: color .12s ease, background-color .12s ease;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* Animations */
@@ -414,7 +503,7 @@ textarea::placeholder{
 
 .center-absolute {
   position: absolute;                
-  top: 50%;
+  top: 60%;
   left: 48%;
   transform: translate(-50%, -50%);
   z-index: 10;                      
