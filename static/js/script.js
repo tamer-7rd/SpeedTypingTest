@@ -78,12 +78,102 @@ async function textShowing() {
 
 
 
+// --- Error sound (beep) ---
+let _audioCtx = null;
+let _lastBeepAt = 0;
+
+function playErrorBeep() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!_audioCtx) _audioCtx = new AC();
+    if (_audioCtx.state === 'suspended') { _audioCtx.resume(); }
+    const ctx = _audioCtx;
+    const now = ctx.currentTime;
+    // Throttle to avoid overlap
+    if (now - _lastBeepAt < 0.05) return;
+    _lastBeepAt = now;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(110, now); // low "error" tone
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.2, now + 0.005);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.25);
+  } catch (e) {
+    // ignore audio errors (e.g., autoplay policies)
+  }
+}
 
 
 
 
 
-// Инпуты поверх (Вот тут остановился)
+function placeInputAt(index, container, letters, input, caret = null) {
+  if (index < 0) index = 0;
+  if (index >= letters.length) index = letters.length - 1;
+
+  const target = letters[index];
+  const cr = container.getBoundingClientRect();
+  const tr = target.getBoundingClientRect();
+
+  const left = tr.left - cr.left;
+  const top = tr.top - cr.top;
+
+  // Позиционируем узкий инпут так, чтобы каретка стояла у левого края текущей буквы
+  input.style.left = `${left}px`;
+  input.style.top = `${top}px`;
+  input.style.height = `${tr.height}px`;
+  input.style.width = `2px`;
+
+  // Если есть кастомная каретка — позиционируем и её
+  if (caret) {
+    caret.style.left = `${left}px`;
+    caret.style.top = `${top}px`;
+    caret.style.height = `${tr.height}px`;
+  }
+}
+
+function markLetter(idx, letters, char) {
+  const el = letters[idx];
+  if (!el) return false;
+
+  // Что ожидаем
+  let expected = el.dataset.ch ?? (el.classList.contains("space") ? " " : el.textContent);
+
+  // Нормализация (убираем &nbsp; и т.п.)
+  const normalize = s => (s === "\u00A0" || s === "" ? " " : s);
+
+  el.classList.remove("correct-letter", "wrong-letter", "shake");
+
+  if (normalize(char) === normalize(expected)) {
+    el.classList.add("correct-letter");
+    return true;
+  } else {
+    el.classList.add("wrong-letter", "shake");
+    playErrorBeep();
+    // Удаляем класс shake после окончания анимации
+    const onAnimEnd = () => {
+      el.classList.remove("shake");
+      el.removeEventListener("animationend", onAnimEnd);
+    };
+    el.addEventListener("animationend", onAnimEnd);
+    return false;
+  }
+}
+
+function clearMark(idx, letters) {
+  const el = letters[idx];
+  if (!el) return;
+  el.classList.remove("correct-letter", "wrong-letter", "shake");
+}
+
+
+
+
 
 function initTypingOverlay(containerSelector = ".text-container") {
   const container = document.querySelector(containerSelector);
@@ -102,6 +192,14 @@ function initTypingOverlay(containerSelector = ".text-container") {
   input.setAttribute("spellcheck", "false");
   container.appendChild(input);
 
+  // Кастомная физическая каретка (жёлтая) поверх overlay-инпута
+  const caret = document.createElement("div");
+  caret.className = "typing-caret"; // стили в CSS
+  caret.setAttribute("aria-hidden", "true");
+  caret.style.zIndex = "6"; // выше инпута (инпут z-index:5 в CSS)
+  container.appendChild(caret);
+
+
   // --- Глобальные гаранты фокуса: всегда можно печатать ---
   function forceFocus() {
     if (document.activeElement !== input) {
@@ -113,82 +211,13 @@ function initTypingOverlay(containerSelector = ".text-container") {
   // Если фокус ушёл — вернём его сразу (следующий тик, чтобы не ломать клики)
   input.addEventListener("blur", () => setTimeout(forceFocus, 0));
 
-  // Клик в пределах текстового контейнера — сразу возвращаем фокус в инпут
-  container.addEventListener("mousedown", (e) => {
-    e.preventDefault(); // не даём выделять текст
-    forceFocus();
-  });
-
-  // Любой клик по документу: возвращаем фокус, КРОМЕ кликов по интерактивным полям
-  document.addEventListener(
-    "pointerdown",
-    (e) => {
-      const t = e.target;
-      if (!(t instanceof Element)) return;
-      // Не перехватываем клики по реальным инпутам/селектам/контент-эдитаблам/кнопкам/ссылкам
-      if (t.closest("input, textarea, select, [contenteditable=true], .typing-overlay-input")) return;
-      // Если нажали на кнопку/ссылку — не мешаем клику, просто вернём фокус после
-      if (t.closest("button, a")) {
-        setTimeout(forceFocus, 0);
-        return;
-      }
-      // В остальных случаях — сразу фокусим наш скрытый инпут
-      forceFocus();
-    },
-    { capture: true }
-  );
-
   // Если окно вновь получило фокус (после переключения вкладок) — вернуть фокус в инпут
   window.addEventListener("focus", forceFocus);
 
+
+
+
   let i = 0; // текущий индекс буквы
-
-  // Позиционируем инпут на букве i
-  function placeInputAt(index) {
-    if (index < 0) index = 0;
-    if (index >= letters.length) index = letters.length - 1;
-
-    const target = letters[index];
-    const cr = container.getBoundingClientRect();
-    const tr = target.getBoundingClientRect();
-
-    const left = tr.left - cr.left + container.scrollLeft;
-    const top = tr.top - cr.top + container.scrollTop;
-
-    input.style.left = `${left}px`;
-    input.style.top = `${top}px`;
-    input.style.width = `${tr.width}px`;
-    input.style.height = `${tr.height}px`;
-  }
-
-  // Сравнение и маркировка буквы
-  function markLetter(idx, char) {
-    const el = letters[idx];
-    if (!el) return;
-
-    // Что ожидаем
-    let expected = el.dataset.ch ?? (el.classList.contains("space") ? " " : el.textContent);
-
-    // Нормализация (убираем &nbsp; и т.п.)
-    const normalize = s => (s === "\u00A0" || s === "" ? " " : s);
-
-    // console.debug('idx', i, 'exp', JSON.stringify(expected), 'got', JSON.stringify(char));
-
-    el.classList.remove("correct-letter", "wrong-letter");
-
-    if (normalize(char) === normalize(expected)) {
-      el.classList.add("correct-letter");
-    } else {
-      el.classList.add("wrong-letter");
-    }
-  }
-
-  // Сбрасываем метку, когда откатываемся
-  function unmarkLetter(idx) {
-    const el = letters[idx];
-    if (!el) return;
-    el.classList.remove("correct-letter", "wrong-letter");
-  }
 
   // Слушаем ввод
   input.addEventListener("input", () => {
@@ -196,38 +225,50 @@ function initTypingOverlay(containerSelector = ".text-container") {
     const v = input.value;
     if (!v) return;
     const ch = v.slice(-1);
-    // Сравниваем и двигаем индекс
-    markLetter(i, ch);
-    i = Math.min(i + 1, letters.length); // сдвиг
-    input.value = "";                     // держим инпут пустым
-    if (i < letters.length) placeInputAt(i);
+    // Сравниваем и двигаем индекс только если правильно
+    const isCorrect = markLetter(i, letters, ch);
+    if (isCorrect) {
+      i = Math.min(i + 1, letters.length); // сдвиг
+      if (i < letters.length) placeInputAt(i, container, letters, input, caret);
+    }
+    input.value = ""; // держим инпут пустым
   });
 
   // Backspace — шаг назад
   input.addEventListener("keydown", (e) => {
     if (e.key === "Backspace") {
       e.preventDefault();
-      // Если мы уже на первой, просто остаёмся
+      const curr = letters[i];
+      // Если мы на ошибочном символе (или помеченном по какой-то причине) — стираем его и НЕ двигаемся назад
+      if (curr && (curr.classList.contains("wrong-letter") || curr.classList.contains("correct-letter"))) {
+        curr.classList.remove("correct-letter", "wrong-letter", "shake");
+        curr.textContent = curr.dataset.ch ?? curr.textContent;
+        placeInputAt(i, container, letters, input, caret);
+        return;
+      }
+      // Иначе двигаемся на предыдущий символ и чистим его
       if (i > 0) {
         i -= 1;
-        unmarkLetter(i);
-        placeInputAt(i);
+        const el = letters[i];
+        if (el) {
+          el.classList.remove("correct-letter", "wrong-letter", "shake");
+          el.textContent = el.dataset.ch ?? el.textContent;
+        }
+        placeInputAt(i, container, letters, input, caret);
       }
     }
   });
 
-  // Фокус и начальная позиция
+  // Нативный карет у текущей буквы
   input.focus();
-  placeInputAt(i);
+  placeInputAt(i, container, letters, input, caret);
 
   // На всякий случай — если контейнер скроллят/ресайзят
-  const ro = new ResizeObserver(() => placeInputAt(i));
+  const ro = new ResizeObserver(() => placeInputAt(i, container, letters, input, caret));
   ro.observe(container);
 
   return { container, input, letters, get index() { return i; } };
 }
-
-
 
 
 
