@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from email_sender import EmailSender
 
 app = Flask(__name__)
-email_sender = EmailSender
+email_sender = EmailSender()
 
 
 @app.route('/')

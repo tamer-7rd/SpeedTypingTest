@@ -16,7 +16,7 @@ class EmailSender():
     self.today = now.today
 
 
-  def send_email(email, name, number, message):
+  def send_email(self, email, name, number, message):
     with sm.SMTP(host="smtp.gmail.com", port=587) as connection:
       connection.starttls()
       connection.login(user=email_bot, password=email_bot_password)
