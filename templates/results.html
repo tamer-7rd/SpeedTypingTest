@@ -1,0 +1,17 @@
+{% include "header.html" %}
+
+<div class="results-page">
+    <h1>Результаты теста</h1>
+    
+    <div class="results-data">
+        <p>WPM: {{ wpm }}</p>
+        <p>Точность: {{ accuracy }}%</p>
+        <p>Время: {{ time }} секунд</p>
+        <p>Правильных символов: {{ correct_chars }}</p>
+        <p>Ошибок: {{ incorrect_chars }}</p>
+    </div>
+    
+    <a href="/" class="btn">Новый тест</a>
+</div>
+
+{% include "footer.html" %}

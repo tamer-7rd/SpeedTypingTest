@@ -32,7 +32,19 @@ def contact():
         email_sender.send_email(name=name, email=email,number=number,message=message)
         return render_template("contact.html", msg_sent=True)
 
-
-
-if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+@app.route('/results')
+def results():
+    # Получаем данные из GET параметров
+    wpm = request.args.get('wpm', 0, type=int)
+    accuracy = request.args.get('accuracy', 0, type=int)
+    time_taken = request.args.get('time', 0, type=int)
+    correct_chars = request.args.get('correctChars', 0, type=int)
+    incorrect_chars = request.args.get('incorrectChars', 0, type=int)
+    
+    # Передаем данные в шаблон
+    return render_template("results.html", 
+                         wpm=wpm, 
+                         accuracy=accuracy, 
+                         time=time_taken, 
+                         correct_chars=correct_chars, 
+                         incorrect_chars=incorrect_chars)

@@ -11,6 +11,21 @@ function normalizeChar(char) {
 
 let typingTime = 0;
 
+// Простая функция для передачи результатов во Flask
+function sendResultsToFlask(results, totalSeconds) {
+  // Создаем URL с параметрами
+  const params = new URLSearchParams({
+      wpm: results.wpm,
+      accuracy: results.acc,
+      time: totalSeconds,
+      correctChars: correctCount,
+      incorrectChars: incorrectCount
+  });
+  
+  // Перенаправляем на страницу результатов
+  window.location.href = `/results?${params.toString()}`;
+}
+
 function countdown(btn) {
   let time = btn.querySelector('.seconds').textContent;
   // let value = (time === '3') ? 179 : +time -1;
@@ -22,7 +37,7 @@ function countdown(btn) {
     if (value <= 0) {
       clearInterval(timer);
       const results = calculateResults(typingTime);
-      setTimeout(() => alert(`acc = ${results.acc}; wpm = ${results.wpm}; time=${typingTime}`), 1);
+      setTimeout(() => sendResultsToFlask(results, typingTime), 1);
     }
     btn.querySelector('.seconds').textContent = value--;
   }, 1000)
@@ -192,7 +207,7 @@ function calculateResults (totalSeconds) {
   let acc = 0;
   let wpm = 0;
 
-  if (correctCount === 0 || incorrectCount === 0) {
+  if (correctCount === 0 && incorrectCount === 0) {
     return {acc, wpm};
   }
   
@@ -254,7 +269,7 @@ function initTypingOverlay(containerSelector = ".text-container", btn) {
         placeInputAt(i, container, letters, input, caret);
       } else {
         const results = calculateResults(typingTime);
-        alert(`acc = ${results.acc}; wpm = ${results.wpm}`)
+        sendResultsToFlask(results, typingTime);
       }
     } else if (!isCorrect) {
       scoreCounting(false, i, letters);
