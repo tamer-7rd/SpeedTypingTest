@@ -48,3 +48,7 @@ def results():
                          time=time_taken, 
                          correct_chars=correct_chars, 
                          incorrect_chars=incorrect_chars)
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5001)
