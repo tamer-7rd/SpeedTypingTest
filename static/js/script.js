@@ -148,15 +148,6 @@ function placeInputAt(index, container, letters, input, caret) {
     caret.style.top = `${top}px`;
     caret.style.height = `${tr.height}px`;
   }
-
-//  Force scroll to the current letter
-  if (target) {
-    target.scrollIntoView({ 
-      behavior: 'smooth', 
-      block: 'center',
-      inline: 'center'
-    });
-  }
 }
 
 // Marks a letter as correct or incorrect based on user input
@@ -281,6 +272,17 @@ async function textShowing(btn) {
     const words = randomText.trim().split(/\s+/);
     makeText(words);
     initTypingOverlay(".text-container", btn);
+    
+    // Scroll to text container once at the beginning
+    setTimeout(() => {
+      const container = document.querySelector('.text-container');
+      if (container) {
+        container.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      }
+    }, 100);
   } catch (e) {
     console.error('The error is:', e)
   }
