@@ -2,15 +2,27 @@
 
 const buttons = document.querySelectorAll('.button');
 
+// Глобальная функция нормализации символов
+function normalizeChar(char) {
+  if (char === "\u00A0") return " "; 
+  if (char === "") return null; 
+  return char;
+}
+
+let typingTime = 0;
 
 function countdown(btn) {
   let time = btn.querySelector('.seconds').textContent;
-  let value = (time === '3') ? 180 : +time;
-  btn.classList.add('no-clicking')
+  // let value = (time === '3') ? 179 : +time -1;
+  let value = 5;
+  btn.classList.add('no-clicking');
   const timer = setInterval(() => {
     btn.querySelector('small').textContent = 'seconds';
+    if (value >= 1) typingTime++;
     if (value <= 0) {
       clearInterval(timer);
+      const results = calculateResults(typingTime);
+      setTimeout(() => alert(`acc = ${results.acc}; wpm = ${results.wpm}; time=${typingTime}`), 1);
     }
     btn.querySelector('.seconds').textContent = value--;
   }, 1000)
@@ -59,7 +71,7 @@ function makeText(words) {
 }
 
 
-async function textShowing() {
+async function textShowing(btn) {
   try {
     // Инициализируем аудио контекст при первом взаимодействии
     if (!_audioCtx) {
@@ -73,13 +85,11 @@ async function textShowing() {
     const randomText = await randomTextSelector();
     const words = randomText.trim().split(/\s+/);
     makeText(words);
-    initTypingOverlay(".text-container");
+    initTypingOverlay(".text-container", btn);
   } catch (e) {
     console.error('The error is:', e)
   }
 }
-
-
 
 
 // --- Error sound (beep) ---
@@ -112,9 +122,6 @@ function playErrorBeep() {
   }
 }
 
-
-
-
 function placeInputAt(index, container, letters, input, caret) {
   if (index >= letters.length) index = letters.length - 1;
 
@@ -136,7 +143,6 @@ function placeInputAt(index, container, letters, input, caret) {
 }
 
 
-
 function markLetter(idx, letters, char) {
   const el = letters[idx];
   if (!el) return false;
@@ -144,16 +150,9 @@ function markLetter(idx, letters, char) {
   // Что ожидаем
   let expected = el.dataset.ch;
 
-  // Нормализация (убираем &nbsp; и т.п.)
-  const normalize = s => {
-    if (s === "\u00A0") return " "; 
-    if (s === "") return null; 
-    return s;
-  };
-
   clearMark(idx, letters); 
 
-  if (normalize(char) === normalize(expected) && normalize(char) !== null) {
+  if (normalizeChar(char) === normalizeChar(expected) && normalizeChar(char) !== null) {
     el.classList.add("correct-letter");
     return true;
   } else {
@@ -175,8 +174,35 @@ function clearMark(idx, letters) {
 }
 
 
+let correctCount = 0;
+let incorrectCount = 0;
+let incorrectLetter = "";
 
-function initTypingOverlay(containerSelector = ".text-container") {
+function scoreCounting (result, i, letters) {
+  const letter = normalizeChar(letters[i]);
+  if (result === true) {
+    correctCount++;
+  } else if (result === false && incorrectLetter !== letter) {
+    incorrectCount++;
+    incorrectLetter = letter;
+  }
+}
+
+function calculateResults (totalSeconds) {
+  let acc = 0;
+  let wpm = 0;
+
+  if (correctCount === 0 || incorrectCount === 0) {
+    return {acc, wpm};
+  }
+  
+  acc = Math.round(correctCount * 100 / (correctCount + incorrectCount));
+  wpm = Math.round(((correctCount / 5) / totalSeconds) * 60);
+  return {acc, wpm};
+}
+
+
+function initTypingOverlay(containerSelector = ".text-container", btn) {
   const container = document.querySelector(containerSelector);
   if (!container) throw new Error("Container not found");
 
@@ -209,18 +235,29 @@ function initTypingOverlay(containerSelector = ".text-container") {
   input.addEventListener("blur", () => setTimeout(forceFocus, 0));
   window.addEventListener("focus", forceFocus);
 
+  let countdownLaunched = false;
   let i = 0; // текущий индекс буквы
 
   // Слушаем ввод
   input.addEventListener("input", () => {
     const char = input.value.slice(-1);
     if (!char) return;
+    if (countdownLaunched === false) {
+      countdown(btn);
+      countdownLaunched = true;
+    }
     const isCorrect = markLetter(i, letters, char);
     if (isCorrect) {
-      i++; 
+      i++;
+      scoreCounting(true, i-1, letters);
       if (i < letters.length) {
         placeInputAt(i, container, letters, input, caret);
+      } else {
+        const results = calculateResults(typingTime);
+        alert(`acc = ${results.acc}; wpm = ${results.wpm}`)
       }
+    } else if (!isCorrect) {
+      scoreCounting(false, i, letters);
     }
     input.value = ""; 
   });
@@ -249,17 +286,6 @@ function initTypingOverlay(containerSelector = ".text-container") {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
 buttons.forEach((btn) => {
   btn.addEventListener('click', () => {
     buttons.forEach((other) => {
@@ -268,7 +294,12 @@ buttons.forEach((btn) => {
       }
     });
     btn.classList.add('center-absolute');
-    textShowing();
-    countdown(btn);
+    textShowing(btn);
   });
 });
+
+
+
+
+
+

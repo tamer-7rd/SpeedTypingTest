@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from email_sender import EmailSender
 
 app = Flask(__name__)
@@ -33,6 +33,6 @@ def contact():
         return render_template("contact.html", msg_sent=True)
 
 
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
-
