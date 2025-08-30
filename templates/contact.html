@@ -7,10 +7,9 @@
 
     <div class="contacts">
       <p>📞 Phone: +994535410563</p>
-      <p>📮 Email: <span id="mail"> 7rdlabaratory@gmail.com (Nastroy formi chto bi nelza bilo otpravlat pustie formi ) </span></p>
+      <p>📮 Email: <span id="mail"> 7rdlabaratory@gmail.com</span></p>
       <p>Adress: Baku city 17/23 Yusif Safarov Street </p>
     </div>
-
 
     <!-- Contact form -->
     {% if msg_sent: %}
@@ -22,19 +21,19 @@
         
           <div class="form-left flex-grow-1">
             <div class="mb-3">
-              <input type="text" name="name" class="form-control bg-white" id="exampleFormControlInput1" placeholder="YOUR NAME *">
+              <input type="text" name="name" class="form-control bg-white" id="exampleFormControlInput1" placeholder="YOUR NAME *" required>
             </div>
             <div class="mb-3">
-              <input type="email" name="email" class="form-control bg-white" id="exampleFormControlInput1" placeholder="YOUR EMAIL *">
+              <input type="email" name="email" class="form-control bg-white" id="exampleFormControlInput1" placeholder="YOUR EMAIL *" required>
             </div>
             <div class="mb-3">
-              <input type="number" name="number" class="form-control bg-white" id="exampleFormControlInput1" placeholder="YOUR PHONE *">
+              <input type="tel" name="number" class="form-control bg-white" id="exampleFormControlInput1" placeholder="YOUR PHONE *" required>
             </div>
           </div>
 
           <div class="form-right flex-grow-1">
             <div class="mb-3">
-              <textarea name="message" class="form-control bg-white" id="exampleFormControlTextarea1" rows="9" style="resize: none;" placeholder="YOUR MESSAGE *"></textarea>
+              <textarea name="message" class="form-control bg-white" id="exampleFormControlTextarea1" rows="9" style="resize: none;" placeholder="YOUR MESSAGE *" required></textarea>
             </div>
           </div>
         </div>
