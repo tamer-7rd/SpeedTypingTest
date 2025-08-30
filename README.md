@@ -40,32 +40,6 @@ The application tracks and displays:
 - blinker
 - Werkzeug
 
-## 📁 Project Structure
-
-SpeedTypingTest/
-├── main.py                 # Flask application entry point
-├── email_sender.py         # Email functionality
-├── requirements.txt        # Python dependencies
-├── plan.txt               # Project planning notes
-├── static/
-│   ├── assets/
-│   │   ├── data.json       # Text passages for typing tests
-│   │   ├── icons/          # Social media icons
-│   │   └── img/            # Images and backgrounds
-│   ├── css/
-│   │   └── styles.css      # Main stylesheet
-│   └── js/
-│       ├── script.js       # Main application logic
-│       └── test.js         # Additional JavaScript
-└── templates/
-    ├── home.html           # Landing page
-    ├── learn.html          # Typing tutorial
-    ├── about.html          # About page
-    ├── contact.html        # Contact form
-    ├── results.html        # Test results display
-    ├── header.html         # Navigation header
-    └── footer.html         # Page footer
-```
 
 ## 🚀 Installation & Setup
 
