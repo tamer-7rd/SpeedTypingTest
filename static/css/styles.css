@@ -538,3 +538,51 @@ transition: color .12s ease, background-color .12s ease;
 .shake {
   animation: shake 0.3s;
 }
+
+/* Results page styles */
+.results-page {
+  position: relative;
+  text-align: center;
+  background-color: #f6f6f7;
+  padding: 50px;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.results-page h1 {
+  margin-bottom: 40px;
+}
+
+.results-data {
+  background-color: white;
+  border: 4px solid #ffd000;
+  border-radius: 15px;
+  padding: 30px;
+  margin: 20px 0;
+  max-width: 400px;
+  width: 100%;
+}
+
+.results-data p {
+  margin: 15px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .results-page {
+    padding: 30px 20px;
+  }
+  
+  .results-data {
+    padding: 20px;
+    margin: 15px 0;
+  }
+  
+  .results-data p {
+    font-size: 16px;
+  }
+}

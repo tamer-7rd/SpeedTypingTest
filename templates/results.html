@@ -1,17 +1,17 @@
 {% include "header.html" %}
 
 <div class="results-page">
-    <h1>Результаты теста</h1>
+    <h1 class="cutive-mono-regular">Test results</h1>
     
-    <div class="results-data">
-        <p>WPM: {{ wpm }}</p>
-        <p>Точность: {{ accuracy }}%</p>
-        <p>Время: {{ time }} секунд</p>
-        <p>Правильных символов: {{ correct_chars }}</p>
-        <p>Ошибок: {{ incorrect_chars }}</p>
+    <div class="results-data kode-mono-secondary">
+        <p>WPM (Words per minute): {{ wpm }}</p>
+        <p>Accuracy: {{ accuracy }}%</p>
+        <p>Time: {{ time }} seconds</p>
+        <p>Correct symbols: {{ correct_chars }}</p>
+        <p>Incorrect symbols: {{ incorrect_chars }}</p>
     </div>
     
-    <a href="/" class="btn">Новый тест</a>
+    <a href="/" class="btn btn-warning mb-3">NEW TEST</a>
 </div>
 
 {% include "footer.html" %}
