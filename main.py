@@ -34,14 +34,12 @@ def contact():
 
 @app.route('/results')
 def results():
-    # Получаем данные из GET параметров
     wpm = request.args.get('wpm', 0, type=int)
     accuracy = request.args.get('accuracy', 0, type=int)
     time_taken = request.args.get('time', 0, type=int)
     correct_chars = request.args.get('correctChars', 0, type=int)
     incorrect_chars = request.args.get('incorrectChars', 0, type=int)
     
-    # Передаем данные в шаблон
     return render_template("results.html", 
                          wpm=wpm, 
                          accuracy=accuracy, 

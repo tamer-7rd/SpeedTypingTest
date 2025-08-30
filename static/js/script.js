@@ -2,7 +2,7 @@
 
 const buttons = document.querySelectorAll('.button');
 
-// Глобальная функция нормализации символов
+// Global character normalization function
 function normalizeChar(char) {
   if (char === "\u00A0") return " "; 
   if (char === "") return null; 
@@ -11,9 +11,9 @@ function normalizeChar(char) {
 
 let typingTime = 0;
 
-// Простая функция для передачи результатов во Flask
+// Simple function to send results to Flask
 function sendResultsToFlask(results, totalSeconds) {
-  // Создаем URL с параметрами
+  // Create URL with parameters
   const params = new URLSearchParams({
       wpm: results.wpm,
       accuracy: results.acc,
@@ -22,14 +22,13 @@ function sendResultsToFlask(results, totalSeconds) {
       incorrectChars: incorrectCount
   });
   
-  // Перенаправляем на страницу результатов
+  // Redirect to results page
   window.location.href = `/results?${params.toString()}`;
 }
 
 function countdown(btn) {
   let time = btn.querySelector('.seconds').textContent;
-  // let value = (time === '3') ? 179 : +time -1;
-  let value = 5;
+  let value = (time === '3') ? 179 : +time -1;
   btn.classList.add('no-clicking');
   const timer = setInterval(() => {
     btn.querySelector('small').textContent = 'seconds';
@@ -65,7 +64,7 @@ function makeText(words) {
   container.innerHTML = '';
   container.classList.add('container-padding', 'cutive-mono-regular');
 
-  words.forEach(word => {
+  words.forEach((word, index) => {
     const wordEl = document.createElement('span');
     wordEl.className = 'word';
 
@@ -73,14 +72,17 @@ function makeText(words) {
       const letterEl = document.createElement('span');
       letterEl.className = 'letter';
       letterEl.textContent = ch;
-      letterEl.dataset.ch = ch;   // <- сохраняем ожидаемый символ
+      letterEl.dataset.ch = ch;   // <- save expected character
       wordEl.appendChild(letterEl);
     }
-
-    const spaceEl = document.createElement('span');
-    spaceEl.className = 'letter space';
-    spaceEl.dataset.ch = ' ';     // <- ожидаемый пробел
-    wordEl.appendChild(spaceEl);
+    
+    // Add space only if it's not the last word
+    if (index < words.length - 1) {
+      const spaceEl = document.createElement('span');
+      spaceEl.className = 'letter space';
+      spaceEl.dataset.ch = ' ';
+      wordEl.appendChild(spaceEl);
+    }
     container.appendChild(wordEl);
   });
 }
@@ -88,7 +90,7 @@ function makeText(words) {
 
 async function textShowing(btn) {
   try {
-    // Инициализируем аудио контекст при первом взаимодействии
+    // Initialize audio context on first interaction
     if (!_audioCtx) {
       const AC = window.AudioContext || window.webkitAudioContext;
       _audioCtx = new AC();
@@ -162,7 +164,7 @@ function markLetter(idx, letters, char) {
   const el = letters[idx];
   if (!el) return false;
 
-  // Что ожидаем
+
   let expected = el.dataset.ch;
 
   clearMark(idx, letters); 
@@ -223,7 +225,7 @@ function initTypingOverlay(containerSelector = ".text-container", btn) {
 
   const letters = Array.from(container.querySelectorAll(".letter"));
 
-  // Создаём оверлей-инпут
+  // Create overlay input
   const input = document.createElement("input");
   input.className = "typing-overlay-input";
   input.setAttribute("autocomplete", "off");
@@ -232,7 +234,7 @@ function initTypingOverlay(containerSelector = ".text-container", btn) {
   input.setAttribute("spellcheck", "false");
   container.appendChild(input);
 
-  // Кастомная физическая каретка (жёлтая) поверх overlay-инпута
+  // Custom physical caret (yellow) over overlay input
   const caret = document.createElement("div");
   caret.className = "typing-caret"; 
   caret.setAttribute("aria-hidden", "true");
@@ -242,7 +244,7 @@ function initTypingOverlay(containerSelector = ".text-container", btn) {
 
   function forceFocus() {
     if (document.activeElement !== input) {
-      // preventScroll, чтобы страница не дёргалась при фокусе
+      // preventScroll to avoid page jumping on focus
       input.focus({ preventScroll: true });
     }
   }
@@ -251,9 +253,9 @@ function initTypingOverlay(containerSelector = ".text-container", btn) {
   window.addEventListener("focus", forceFocus);
 
   let countdownLaunched = false;
-  let i = 0; // текущий индекс буквы
+  let i = 0; // current letter index
 
-  // Слушаем ввод
+  // Listen for input
   input.addEventListener("input", () => {
     const char = input.value.slice(-1);
     if (!char) return;
@@ -277,7 +279,7 @@ function initTypingOverlay(containerSelector = ".text-container", btn) {
     input.value = ""; 
   });
 
-  // Backspace — шаг назад
+  // Backspace — step back
   input.addEventListener("keydown", (e) => {
     if (e.key === "Backspace") {
       e.preventDefault();
@@ -295,7 +297,7 @@ function initTypingOverlay(containerSelector = ".text-container", btn) {
     }
   });
 
-  // Нативный карет у текущей буквы
+  // Native caret at current letter
   input.focus();
   placeInputAt(i, container, letters, input, caret);
 }
