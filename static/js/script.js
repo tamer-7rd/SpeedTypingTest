@@ -219,7 +219,7 @@ function sendResultsToFlask(results, totalSeconds) {
   const params = new URLSearchParams({
       wpm: results.wpm,
       accuracy: results.acc,
-      time: totalSeconds,
+      time: totalSeconds +1,
       correctChars: correctCount,
       incorrectChars: incorrectCount
   });
