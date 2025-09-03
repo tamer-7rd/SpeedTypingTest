@@ -1,8 +1,6 @@
 "use strict";
 
-// ============================================================================
-// INITIALIZATION AND CONSTANTS
-// ============================================================================
+
 
 // Get all test duration buttons
 const buttons = document.querySelectorAll('.button');
