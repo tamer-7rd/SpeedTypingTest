@@ -1,19 +1,28 @@
 "use strict";
 
-
+import { countdown, calculateResults } from "./timer.js";
+import {playErrorBeep} from "./audio.js";
 
 // Get all test duration buttons
 const buttons = document.querySelectorAll('.button');
 
-// Global variables for tracking typing statistics
-let typingTime = 0;
-let correctCount = 0;
-let incorrectCount = 0;
+// State object for tracking typing statistics
+export const stats = {
+  typingTime: 0,
+  correctCount: 0,
+  incorrectCount: 0,
+}
+
 let incorrectLetter = "";
 
-// Audio context for generating error sounds
-let _audioCtx = null;
-let _lastBeepAt = 0;
+
+// Audio context state objects for generating error sounds
+export const soundStats = {
+  _audioCtx: null,
+  _lastBeepAt: 0,
+}
+
+
 
 // ============================================================================
 // UTILITIES AND HELPERS
@@ -87,39 +96,6 @@ function makeText(words) {
 }
 
 // ============================================================================
-// AUDIO SYSTEM
-// ============================================================================
-
-// Plays error sound when user types incorrect character
-// Uses Web Audio API to generate a beep sound
-function playErrorBeep() {
-  try {
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (!_audioCtx) _audioCtx = new AC();
-    if (_audioCtx.state === 'suspended') { _audioCtx.resume(); }
-    const ctx = _audioCtx;
-    const now = ctx.currentTime;
-    // Throttle to avoid overlap - prevent multiple beeps too close together
-    if (now - _lastBeepAt < 0.05) return;
-    _lastBeepAt = now;
-
-    // Create oscillator and gain nodes for sound generation
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(220, now); // low "error" tone (220 Hz)
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.7, now + 0.005);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
-    osc.connect(gain).connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 0.25);
-  } catch (e) {
-    // ignore audio errors (e.g., autoplay policies, unsupported browsers)
-  }
-}
-
-// ============================================================================
 // POSITIONING AND VISUALIZATION
 // ============================================================================
 
@@ -185,69 +161,29 @@ function markLetter(idx, letters, char) {
 function scoreCounting (result, i, letters) {
   const letter = normalizeChar(letters[i]);
   if (result === true) {
-    correctCount++;
+    stats.correctCount++;
   } else if (result === false && incorrectLetter !== letter) {
-    incorrectCount++;
-    incorrectLetter = letter; // Track last incorrect letter to avoid double-counting
+    stats.incorrectCount++;
+    incorrectLetter = letter;
   }
-}
-
-// Calculates WPM (Words Per Minute) and accuracy percentage
-// Standard WPM calculation assumes average word length of 5 characters
-function calculateResults (totalSeconds) {
-  let acc = 0;
-  let wpm = 0;
-
-  // Return zero results if no input was made
-  if (correctCount === 0 && incorrectCount === 0) {
-    return {acc, wpm};
-  }
-  
-  // Calculate accuracy as percentage of correct characters
-  acc = Math.round(correctCount * 100 / (correctCount + incorrectCount));
-  // Calculate WPM: (correct characters / 5) / time * 60
-  wpm = Math.round(((correctCount / 5) / totalSeconds) * 60);
-  return {acc, wpm};
 }
 
 // Simple function to send results to Flask backend
 // Creates URL parameters and redirects to results page
-function sendResultsToFlask(results, totalSeconds) {
+export function sendResultsToFlask(results, totalSeconds) {
   // Create URL with parameters
   const params = new URLSearchParams({
       wpm: results.wpm,
       accuracy: results.acc,
       time: totalSeconds +1,
-      correctChars: correctCount,
-      incorrectChars: incorrectCount
+      correctChars: stats.correctCount,
+      incorrectChars: stats.incorrectCount
   });
   
   // Redirect to results page
   window.location.href = `/results?${params.toString()}`;
 }
 
-// ============================================================================
-// TIMER SYSTEM
-// ============================================================================
-
-// Handles countdown timer for typing test
-// Updates button display and launches test when countdown reaches zero
-function countdown(btn) {
-  let time = btn.querySelector('.seconds').textContent;
-  // Set initial value: 179 seconds (3 minutes) if starting from 3, otherwise decrement
-  let value = (time === '3') ? 179 : +time -1;
-  btn.classList.add('no-clicking'); // Prevent multiple clicks during countdown
-  const timer = setInterval(() => {
-    btn.querySelector('small').textContent = 'seconds';
-    if (value >= 1) typingTime++; // Increment typing time only when countdown is active
-    if (value <= 0) {
-      clearInterval(timer);
-      const results = calculateResults(typingTime);
-      setTimeout(() => sendResultsToFlask(results, typingTime), 1); // Small delay to ensure UI updates
-    }
-    btn.querySelector('.seconds').textContent = value--;
-  }, 1000)
-}
 
 // ============================================================================
 // MAIN TYPING TEST LOGIC
@@ -258,12 +194,12 @@ function countdown(btn) {
 async function textShowing(btn) {
   try {
     // Initialize audio context on first interaction (required for autoplay policies)
-    if (!_audioCtx) {
+    if (!soundStats._audioCtx) {
       const AC = window.AudioContext || window.webkitAudioContext;
-      _audioCtx = new AC();
+      soundStats._audioCtx = new AC();
     }
-    if (_audioCtx.state === 'suspended') {
-      await _audioCtx.resume();
+    if (soundStats._audioCtx.state === 'suspended') {
+      await soundStats._audioCtx.resume();
     }
     
     const randomText = await randomTextSelector();
@@ -341,8 +277,8 @@ function initTypingOverlay(containerSelector = ".text-container", btn) {
       if (i < letters.length) {
         placeInputAt(i, container, letters, input, caret); // Move to next letter
       } else {
-        const results = calculateResults(typingTime); // Test completed
-        sendResultsToFlask(results, typingTime);
+        const results = calculateResults(stats.typingTime); // Test completed
+        sendResultsToFlask(results, stats.typingTime);
       }
     } else if (!isCorrect) {
       scoreCounting(false, i, letters);
