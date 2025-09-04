@@ -4,9 +4,7 @@ import { sendResultsToFlask, stats } from "./typingTest.js";
 // Updates button display and launches test when countdown reaches zero
 export function countdown(btn) {
   let time = btn.querySelector('.seconds').textContent;
-  // Set initial value: 179 seconds (3 minutes) if starting from 3, otherwise decrement
-  // let value = (time === '3') ? 179 : +time -1;
-  let value = 5;
+  let value = (time === '3') ? 179 : +time -1;
   btn.classList.add('no-clicking'); // Prevent multiple clicks during countdown
   const timer = setInterval(() => {
     btn.querySelector('small').textContent = 'seconds';
