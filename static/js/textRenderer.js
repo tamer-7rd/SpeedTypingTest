@@ -31,7 +31,13 @@ export function makeText(words) {
     return;
   }
   container.innerHTML = ''; // Clear container
-  container.classList.add('container-padding', 'cutive-mono-regular');
+  container.classList.add('container-padding');
+  const startTypingEl = document.createElement('span');
+  startTypingEl.className = 'start-typing shake';
+  startTypingEl.textContent = "Start typing!";
+
+  // Add start typing element at the beginning
+  container.appendChild(startTypingEl);
 
   words.forEach((word, index) => {
     const wordEl = document.createElement('span');
@@ -85,6 +91,8 @@ export function placeInputAt(index, container, letters, input, caret) {
 // Marks a letter as correct or incorrect based on user input
 // Applies visual styling and plays error sound for incorrect input
 export function markLetter(idx, letters, char) {
+  const startTypingMessage = document.querySelector(".start-typing");
+  startTypingMessage.textContent = "";
   const el = letters[idx];
   if (!el) return false;
 
