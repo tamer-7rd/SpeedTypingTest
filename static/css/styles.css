@@ -495,7 +495,7 @@ transition: color .12s ease, background-color .12s ease;
   position: absolute;
   font-size: large;
   top: 10px;
-  left: 50px;
+  left: 55px;
   color: #ffd000;
   pointer-events: none;
 }
@@ -594,3 +594,7 @@ transition: color .12s ease, background-color .12s ease;
     font-size: 16px;
   }
 }
+
+
+
+

@@ -1,0 +1,26 @@
+{
+  "name": "speedtypingtest",
+  "version": "1.0.0",
+  "description": "A modern web application for testing and improving typing speed and accuracy. Built with Flask and vanilla JavaScript, featuring real-time feedback and detailed performance analytics.",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamer-7rd/SpeedTypingTest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tamer-7rd/SpeedTypingTest/issues"
+  },
+  "homepage": "https://github.com/tamer-7rd/SpeedTypingTest#readme",
+  "devDependencies": {
+    "jsdom": "^27.0.0",
+    "vitest": "^3.2.4"
+  }
+}
