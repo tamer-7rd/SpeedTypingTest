@@ -388,15 +388,6 @@ textarea::placeholder{
 
 
 
-
-
-
-
-
-
-
-
-
 /* Text Container */
 
 .container-padding {
@@ -502,51 +493,6 @@ transition: color .12s ease, background-color .12s ease;
 
 
 
-
-
-
-
-
-
-
-
-/* Animations */
-
-.fade-out {
-  opacity: 0;
-  transition: opacity 1s;
-  pointer-events: none;
-}
-
-.center-absolute {
-  position: absolute;                
-  top: 60%;
-  left: 48%;
-  transform: translate(-50%, -50%);
-  z-index: 10;                      
-}
-
-@media (max-width: 936px) {
-  .center-absolute {
-    top: 70%;
-    left: 47%;
-  }
-}
-
-.no-clicking {
-  pointer-events: none;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-4px); }
-  40%, 80% { transform: translateX(4px); }
-}
-
-.shake {
-  animation: shake 0.3s;
-}
-
 /* Results page styles */
 .results-page {
   position: relative;
@@ -595,6 +541,351 @@ transition: color .12s ease, background-color .12s ease;
   }
 }
 
+.btn-save {
+  margin-bottom: 20px;
+  width: 200px;
+}
+
+.btn-leaderboard {
+  width: 200px;
+}
+
+.btn-new-test {
+  margin-top: 15px;
+  width: 200px;
+}
+
+
+#countrySelect{
+  padding: 20px 20px;
+  font-size: 15px;
+  color: #585e63;
+  height: auto;
+  min-height: 60px;
+}
+
+.email-small {
+  font-size: 11px;
+  margin-top: 5px;
+  display: block;
+  color:  #007bff;
+}
+
+
+/* Leaderboard Styles */
+.leaderboard-page {
+  position: relative;
+  text-align: center;
+  background-color: #f6f6f7;
+  padding: 50px;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.leaderboard-page h1 {
+  margin-bottom: 40px;
+}
+
+.new-result-notification {
+  margin-bottom: 30px;
+  animation: slideIn 0.5s ease-out;
+}
+
+.notification-box {
+  background: linear-gradient(135deg, #ffd000, #ffed4e);
+  border: 3px solid #ffd000;
+  border-radius: 15px;
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 4px 15px rgba(255, 208, 0, 0.3);
+}
+
+.notification-box h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.notification-box p {
+  margin: 5px 0;
+  color: #555;
+  font-size: 16px;
+}
+
+.leaderboard-container {
+  background-color: white;
+  border: 4px solid #ffd000;
+  border-radius: 15px;
+  padding: 0;
+  margin: 20px 0;
+  max-width: 1000px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-header {
+  background-color: #ffd000;
+  padding: 15px 20px;
+  display: grid;
+  grid-template-columns: 80px 1fr 120px 80px 80px 100px 140px;
+  gap: 15px;
+  align-items: center;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #e6c200;
+}
+
+.leaderboard-body {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.leaderboard-row {
+  padding: 12px 20px;
+  display: grid;
+  grid-template-columns: 80px 1fr 120px 80px 80px 100px 140px;
+  gap: 15px;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.leaderboard-row:hover {
+  background-color: #f5f4f4;
+}
+
+.leaderboard-row.new-entry {
+  background-color: #fff3cd;
+  border: 2px solid #ffd000;
+  animation: highlight 2s ease-out;
+}
+
+.rank-col {
+  text-align: center;
+  position: relative;
+}
+
+.rank-number {
+  font-weight: 600;
+  font-size: 18px;
+  color: #333;
+}
+
+.medal {
+  font-size: 20px;
+  margin-left: 5px;
+}
+
+.player-col {
+  text-align: left;
+}
+
+.username {
+  font-weight: 500;
+  color: #333;
+  font-size: 16px;
+}
+
+.country-col, .wpm-col, .acc-col, .coef-col, .date-col {
+  text-align: center;
+}
+
+.country {
+  font-size: 14px;
+}
+
+.wpm, .accuracy, .score {
+  font-weight: 600;
+  color: #333;
+}
+
+.score {
+  color: #ff6b35;
+  font-size: 16px;
+}
+
+.date {
+  font-size: 12px;
+  color: #666;
+}
+
+.no-results {
+  padding: 40px;
+  color: #666;
+  font-size: 18px;
+}
+
+.leaderboard-actions {
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-results {
+  background-color: #6c757d;
+  border: 2px solid #6c757d;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-results:hover {
+  background-color: #5a6268;
+  border-color: #5a6268;
+  color: white;
+  text-decoration: none;
+}
 
 
 
+/* Responsive Design */
+@media (max-width: 768px) {
+  .leaderboard-page {
+    padding: 30px 20px;
+  }
+  
+  .leaderboard-container {
+    margin: 15px 0;
+  }
+  
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: 60px 1fr 100px 60px 60px 80px 100px;
+    gap: 10px;
+    padding: 10px 15px;
+  }
+  
+  .leaderboard-header {
+    font-size: 12px;
+  }
+  
+  .username {
+    font-size: 14px;
+  }
+  
+  .country, .date {
+    font-size: 11px;
+  }
+  
+  .wpm, .accuracy, .score {
+    font-size: 14px;
+  }
+  
+  .notification-box {
+    padding: 15px;
+    margin: 0 10px;
+  }
+  
+  .notification-box h3 {
+    font-size: 20px;
+  }
+  
+  .leaderboard-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn-new-test,
+  .btn-results {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: 50px 1fr 80px 50px 50px 70px 80px;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+  
+  .leaderboard-header {
+    font-size: 10px;
+  }
+  
+  .username {
+    font-size: 12px;
+  }
+  
+  .country, .date {
+    font-size: 10px;
+  }
+  
+  .wpm, .accuracy, .score {
+    font-size: 12px;
+  }
+}
+
+
+
+
+/* Animations */
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 1s;
+  pointer-events: none;
+}
+
+.center-absolute {
+  position: absolute;                
+  top: 60%;
+  left: 48%;
+  transform: translate(-50%, -50%);
+  z-index: 10;                      
+}
+
+@media (max-width: 936px) {
+  .center-absolute {
+    top: 70%;
+    left: 47%;
+  }
+}
+
+.no-clicking {
+  pointer-events: none;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+.shake {
+  animation: shake 0.3s;
+}
+
+/* Leaderboard animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes highlight {
+  0% {
+    background-color: #fff3cd;
+  }
+  50% {
+    background-color: #ffeaa7;
+  }
+  100% {
+    background-color: #fff3cd;
+  }
+}

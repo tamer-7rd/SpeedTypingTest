@@ -1,0 +1,71 @@
+{% include "header.html" %}
+
+<div class="leaderboard-page">
+    <h1 class="cutive-mono-regular">Leaderboard</h1>
+    
+    {% if new_result %}
+    <div class="new-result-notification kode-mono-secondary">
+        <div class="notification-box">
+            <h3>🎉 Congratulations {{ new_result.username }}!</h3>
+            <p>Your result: {{ "%.1f"|format(new_result.coef) }} points</p>
+            <p>Position: #{{ new_result.position }}</p>
+            <p>WPM: {{ new_result.wpm }} | Accuracy: {{ new_result.acc }}%</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="leaderboard-container">
+        <div class="leaderboard-header kode-mono-secondary">
+            <div class="rank-col">RANK</div>
+            <div class="player-col">PLAYER</div>
+            <div class="country-col">COUNTRY</div>
+            <div class="wpm-col">WPM</div>
+            <div class="acc-col">ACC</div>
+            <div class="coef-col">SCORE</div>
+            <div class="date-col">DATE</div>
+        </div>
+
+        <div class="leaderboard-body">
+            {% if leaderboard %}
+                {% for entry in leaderboard %}
+                <div class="leaderboard-row {% if new_result and entry.username == new_result.username and entry.coef == new_result.coef %}new-entry{% endif %}">
+                    <div class="rank-col">
+                        <span class="rank-number">{{ loop.index }}</span>
+                        {% if loop.index <= 3 %}
+                            <span class="medal">{% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% else %}🥉{% endif %}</span>
+                        {% endif %}
+                    </div>
+                    <div class="player-col">
+                        <span class="username">{{ entry.username }}</span>
+                    </div>
+                    <div class="country-col">
+                        <span class="country">{{ entry.country }}</span>
+                    </div>
+                    <div class="wpm-col">
+                        <span class="wpm">{{ "%.0f"|format(entry.wpm) }}</span>
+                    </div>
+                    <div class="acc-col">
+                        <span class="accuracy">{{ "%.1f"|format(entry.accuracy) }}%</span>
+                    </div>
+                    <div class="coef-col">
+                        <span class="score">{{ "%.1f"|format(entry.coef) }}</span>
+                    </div>
+                    <div class="date-col">
+                        <span class="date">{{ entry.date }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-results kode-mono-secondary">
+                    <p>No results yet. Be the first to take the test!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="leaderboard-actions">
+        <a href="{{ url_for('home') }}" class="btn btn-new-test btn-warning">NEW TEST</a>
+    </div>
+</div>
+
+{% include "footer.html" %}
