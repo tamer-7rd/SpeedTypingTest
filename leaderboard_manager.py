@@ -62,9 +62,9 @@ class LeaderboardManager():
     }
 
     leaderboard.append(new_entry)
-    leaderboard.sort(key=lambda obj: obj['coef'], reverse=True )
-    self.save_leaderboard(leaderboard)
-    leaderboard = leaderboard[:50]
+    leaderboard.sort(key=lambda obj: obj['coef'], reverse=True)
+    leaderboard = leaderboard[:self.max_entries]   
+    self.save_leaderboard(leaderboard)             
 
     user_position = self.find_user_position(leaderboard, 
                                             new_entry['username'], 
