@@ -37,8 +37,7 @@ def leaderboard():
         coef = wpm * (acc / 100)
         
         leaderboard_data, user_position = leaderboard_manager.add_to_leaderboard(username, email, country, wpm, acc, coef)
-        
-        
+          
         return render_template("leaderboard.html", 
                              leaderboard=leaderboard_data,
                              new_result={
