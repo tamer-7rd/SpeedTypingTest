@@ -1,159 +1,88 @@
-# Speed Typing Test
+SpeedTypingTest is a web application for measuring typing speed and accuracy. The frontend is built with vanilla JavaScript modules and real-time feedback, while the Flask backend validates every score and maintains a persistent leaderboard.
 
-A modern web application for testing and improving typing speed and accuracy. Built with Flask and vanilla JavaScript, featuring real-time feedback and detailed performance analytics.
+**Features**
+- Three test durations (30 seconds, 60 seconds, 3 minutes) available from the home screen
+- Real-time highlighting of correct/incorrect characters plus an audio cue on mistakes
+- Backend re-computation of WPM and accuracy to prevent tampering
+- Results page with a form to submit runs to the leaderboard
+- Leaderboard sorted by score (WPM × Accuracy) and capped at 50 records
+- Contact form that emails the administrator via Gmail SMTP
 
-## �� Features
+**Tech Stack**
+- Backend: `Flask`, `Jinja2`
+- Frontend: ES modules (vanilla JS), Bootstrap, custom CSS
+- Testing: `pytest` (Python), `vitest` + `jsdom` (JavaScript)
 
-- **Real-time Typing Test**: Test your typing speed with randomly selected text passages
-- **Multiple Test Durations**: Choose from 30 seconds, 1 or 3-minute tests
-- **Live Performance Tracking**: Real-time WPM (Words Per Minute) and accuracy calculation
-- **Visual Feedback**: Immediate visual feedback for correct/incorrect keystrokes
-- **Audio Feedback**: Error sound effects for incorrect characters
-- **Detailed Results**: Comprehensive results page with performance metrics
-- **Responsive Design**: Works seamlessly on desktop (needs some fixes to clearly work on mobile devices)
-- **Educational Content**: Learn typing techniques and best practices
+**Project Layout**
+- `main.py` — Flask entry point and route definitions
+- `leaderboard_manager.py` — JSON storage, sorting, duplicate checks for the leaderboard
+- `email_sender.py` — Gmail SMTP integration used by the contact form
+- `templates/` — Jinja templates (`home.html`, `results.html`, `leaderboard.html`, `learn.html`, `contact.html`, shared `header.html`/`footer.html`)
+- `static/js/` — typing logic (`typingTest.js`, `timer.js`, `textRenderer.js`, `audio.js`)
+- `static/assets/data.json` — pool of random paragraphs
+- `tests/test_app.py` — Flask integration tests
+- `static/js/__tests__/` — unit tests for frontend modules
 
-## 📊 Performance Metrics
+**Getting Started**
+1. Python environment
+- Install dependencies: `pip install -r requirements.txt`
+- Run the development server: `python main.py`
+- The app serves at http://127.0.0.1:5001 by default
 
-The application tracks and displays:
-- **WPM (Words Per Minute)**: Standard typing speed measurement
-- **Accuracy**: Percentage of correctly typed characters
-- **Time Taken**: Total duration of the test
-- **Character Count**: Breakdown of correct vs incorrect characters
+2. Node environment (for frontend tests)
+- Install packages: `npm install`
 
-## 🛠️ Technology Stack
+**Running Tests**
+- Python: `PYTHONPATH=. pytest tests/test_app.py`
+- JavaScript: `npm test`
+  (Uses Vitest with jsdom.)
 
-### Backend
-- **Flask 3.1.2**: Python web framework
-- **Python 3.x**: Core programming language
-- **Jinja2**: Template engine
+**Environment Variables**
+Create a `.env` file in the project root for SMTP credentials:
 
-### Frontend
-- **Vanilla JavaScript**: No frameworks, pure ES6+ JavaScript
-- **HTML5**: Semantic markup
-- **CSS3**: Modern styling with responsive design
-- **Web Audio API**: For error sound effects
-
-### Dependencies
-- Flask
-- python-dotenv
-- blinker
-- Werkzeug
-
-
-## 🚀 Installation & Setup
-
-### Prerequisites
-- Python 3.7 or higher
-- pip (Python package installer)
-
-### Installation Steps
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/tamer_7rd/SpeedTypingTest.git
-   cd SpeedTypingTest
-   ```
-
-2. **Create a virtual environment (recommended)**
-   ```bash
-   python -m venv venv
-   
-   # On Windows
-   venv\Scripts\activate
-   
-   # On macOS/Linux
-   source venv/bin/activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Run the application**
-   ```bash
-   python main.py
-   ```
-
-5. **Open your browser**
-   Navigate to `http://localhost:5001`
-
-## 🎯 How to Use
-
-1. **Start a Test**: Click on one of the duration buttons
-2. **Type the Text**: Begin typing the displayed text as accurately as possible
-3. **Real-time Feedback**: See immediate visual feedback for each keystroke
-4. **View Results**: After the timer ends, you'll be redirected to your results page
-
-## 🎨 Key Features Explained
-
-### Typing Interface
-- **Invisible Input Field**: Captures keystrokes without visual interference
-- **Custom Caret**: Visual indicator showing current typing position
-- **Character-by-Character Validation**: Real-time feedback for each keystroke
-- **Backspace Support**: Ability to correct mistakes during the test
-
-### Audio System
-- **Error Feedback**: Beep sound for incorrect characters
-- **Throttled Audio**: Prevents audio overlap during rapid typing
-- **Cross-browser Compatibility**: Works with Web Audio API
-
-### Performance Calculation
-- **WPM Formula**: `(correct characters / 5) / time * 60`
-- **Accuracy Formula**: `(correct characters / total characters) * 100`
-- **Real-time Updates**: Continuous calculation during the test
-
-## ⚙️ Configuration
-
-### Customizing Test Texts
-Edit `static/assets/data.json` to add or modify text passages:
-```json
-{
-  "paragraphs": [
-    "Your custom text here...",
-    "Another paragraph...",
-    "More text passages..."
-  ]
-}
+```
+EMAIL_BOT=your_bot@gmail.com
+EMAIL_BOT_PASSWORD=your_app_password
+MY_EMAIL=admin@yourdomain.com
 ```
 
-### Modifying Test Duration
-Edit the countdown logic in `static/js/script.js`:
-```javascript
-let value = (time === '3') ? 179 : +time -1; // 179 seconds = 3 minutes
-```
+Prefer Gmail App Passwords over personal passwords. In production, load secrets from environment managers instead of committing `.env`.
 
-## 🐛 Troubleshooting
+**Backend Routes**
+- `/` — home page and entry point for the typing test (`templates/home.html`)
+- `/results` — displays a run; validates all metrics using `js_round` and redirects home on mismatch (`main.py`)
+- `/leaderboard` — GET shows the table; POST saves a result after computing `coef = wpm * (acc / 100)` (`leaderboard_manager.py`)
+- `/contact` — renders/handles the contact form and triggers email delivery (`email_sender.py`)
 
-### Common Issues
+**Scoring & Validation**
+- WPM: `round(((correctChars / 5) / timeSec) * 60)`
+- Accuracy: `round(correctChars * 100 / (correctChars + incorrectChars))`
+- Backend uses the same JavaScript-style rounding (`js_round`) as the frontend to avoid discrepancies; mismatched submissions are rejected.
 
-1. **Audio not working**
-   - Ensure browser supports Web Audio API
-   - Check if autoplay is blocked in browser settings
+**Leaderboard Rules**
+- Stored in `instance/leaderboard.json` (created automatically)
+- Sorted by `coef` descending, limited to 50 entries (`LeaderboardManager.max_entries`)
+- Duplicate runs (same username, wpm, accuracy, coef) are ignored
 
-2. **Text not loading**
-   - Verify `static/assets/data.json` exists and is valid JSON
-   - Check browser console for fetch errors
+**Deployment Notes**
+- Example command: `gunicorn -w 2 -b 0.0.0.0:5001 main:app`
+- Serve and cache static assets under `static/`
+- Keep all secrets in environment variables or a secret manager
 
-3. **Port already in use**
-   - Change port in `main.py`: `app.run(debug=True, port=5002)`
+**Security & Privacy**
+- Do not commit real `.env` values; ensure `.gitignore` includes it
+- Emails collected via the leaderboard form remain visible only to the administrator
 
-## 🤝 Contributing
+**Key Files**
+- `main.py:1`
+- `leaderboard_manager.py:1`
+- `email_sender.py:1`
+- `templates/home.html:1`
+- `templates/results.html:1`
+- `templates/leaderboard.html:1`
+- `static/js/typingTest.js:1`
+- `static/js/timer.js:1`
+- `static/js/textRenderer.js:1`
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 👨‍💻 Author
-
-Tamerlan Ord
-- GitHub: [@tamer_7rd](https://github.com/tamer_7rd)
-- Email: tamerlan4496@gmail.com
-
-**Happy Typing! ⌨️**
-```
-
-
+**License**
+Not specified. Add a `LICENSE` file and reference here if required.
