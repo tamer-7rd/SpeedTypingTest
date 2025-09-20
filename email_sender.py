@@ -12,11 +12,13 @@ my_email = os.getenv("MY_EMAIL")
 now = dt.datetime.now()
 
 class EmailSender():
+  """Handles sending email notifications from contact form submissions"""
+  
   def __init__(self):
     self.today = now.today
 
-
   def send_email(self, email, name, number, message):
+    """Send contact form submission email to administrator via Gmail SMTP"""
     with sm.SMTP(host="smtp.gmail.com", port=587) as connection:
       connection.starttls()
       connection.login(user=email_bot, password=email_bot_password)

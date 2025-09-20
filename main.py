@@ -3,6 +3,7 @@ from email_sender import EmailSender
 from leaderboard_manager import LeaderboardManager
 import math
 
+# JavaScript-style rounding function to match frontend calculations
 def js_round(x):
     return math.floor(x + 0.5)
 
@@ -75,20 +76,25 @@ def results():
     correct_chars = request.args.get('correctChars', default=None, type=int)
     incorrect_chars = request.args.get('incorrectChars', default=None, type=int)
 
+    # Validate that all required parameters are present
     if None in (wpm, accuracy, time_taken, correct_chars, incorrect_chars):
         return redirect('/')
 
+    # Validate that all values are non-negative
     if any(value < 0 for value in (wpm, accuracy, time_taken, correct_chars, incorrect_chars)):
         return redirect('/')
 
+    # Validate that test was actually taken (has characters typed and time > 0)
     total_chars = correct_chars + incorrect_chars
     if total_chars == 0 or time_taken <= 0:
         return redirect('/')
 
+    # Validate WPM calculation matches frontend calculation
     expected_wpm = js_round(((correct_chars / 5) / time_taken) * 60)
     if expected_wpm != wpm:
         return redirect('/')
 
+    # Validate accuracy calculation matches frontend calculation
     calculated_accuracy = js_round(correct_chars * 100 / (correct_chars + incorrect_chars))
     if calculated_accuracy != accuracy:
         return redirect('/')

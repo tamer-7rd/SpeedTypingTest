@@ -148,20 +148,21 @@ export function initTypingOverlay(containerSelector = ".text-container", btn) {
 }
 
 
-// Event listeners for test buttons
+// Event listeners for test duration buttons (30s, 60s, 3min)
 buttons.forEach((btn) => {
   btn.addEventListener('click', () => {
-    // Hide other buttons with fade effect
+    // Hide other buttons with fade effect for better UX
     buttons.forEach((other) => {
       if (other !== btn) {
         other.classList.add('fade-out');
       }
     });
     btn.classList.add('center-absolute'); // Center the selected button
-    textShowing(btn); // Start the typing test
+    textShowing(btn); // Start the typing test with selected duration
   });
 });
 
+// Main function to start the typing test - loads text and initializes typing interface
 export async function textShowing(btn) {
   try {
     // Initialize audio context on first interaction (required for autoplay policies)
@@ -173,6 +174,7 @@ export async function textShowing(btn) {
       await soundStats._audioCtx.resume();
     }
     
+    // Load random text and prepare for typing
     const randomText = await randomTextSelector();
     const words = randomText.trim().split(/\s+/);
     makeText(words);
