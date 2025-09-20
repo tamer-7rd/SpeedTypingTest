@@ -4,17 +4,19 @@ import { sendResultsToFlask, stats } from "./typingTest.js";
 // Updates button display and launches test when countdown reaches zero
 export function countdown(btn) {
   let time = btn.querySelector('.seconds').textContent;
-  let value = (time === '3') ? 179 : +time -1;
+  let value = (time === '3') ? 180 : +time;
   btn.classList.add('no-clicking'); // Prevent multiple clicks during countdown
   const timer = setInterval(() => {
     btn.querySelector('small').textContent = 'seconds';
-    if (value >= 1) stats.typingTime++; // Increment typing time only when countdown is active
+    btn.querySelector('.seconds').textContent = value - 1;
+    if (value >= 1) stats.typingTime++; // Increment typing time only when countdown is 
+    value -= 1;
     if (value <= 0) {
       clearInterval(timer);
       const results = calculateResults(stats.typingTime);
       setTimeout(() => sendResultsToFlask(results, stats.typingTime), 1); // Small delay to ensure UI updates
     }
-    btn.querySelector('.seconds').textContent = value--;
+    btn.querySelector('.seconds').textContent = value;
   }, 1000)
 }
 

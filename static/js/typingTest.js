@@ -48,7 +48,7 @@ export function sendResultsToFlask(results, totalSeconds) {
   const params = new URLSearchParams({
       wpm: results.wpm,
       accuracy: results.acc,
-      time: totalSeconds +1,
+      time: totalSeconds,
       correctChars: stats.correctCount,
       incorrectChars: stats.incorrectCount
   });
@@ -147,9 +147,6 @@ export function initTypingOverlay(containerSelector = ".text-container", btn) {
   placeInputAt(i, container, letters, input, caret);
 }
 
-// ============================================================================
-// EVENT LISTENERS
-// ============================================================================
 
 // Event listeners for test buttons
 buttons.forEach((btn) => {

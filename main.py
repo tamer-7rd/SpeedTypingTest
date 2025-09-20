@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, redirect
 from email_sender import EmailSender
 from leaderboard_manager import LeaderboardManager
+import math
 
+def js_round(x):
+    return math.floor(x + 0.5)
 
 app = Flask(__name__)
 email_sender = EmailSender()
@@ -66,30 +69,29 @@ def contact():
 
 @app.route('/results')
 def results():
-    wpm = request.args.get('wpm', 0, type=int)
-    accuracy = request.args.get('accuracy', 0, type=int)
-    time_taken = request.args.get('time', 0, type=int)
-    correct_chars = request.args.get('correctChars', 0, type=int)
-    incorrect_chars = request.args.get('incorrectChars', 0, type=int)
-    
-    if not all([wpm, accuracy, time_taken, correct_chars, incorrect_chars]):
-        return redirect('/')  
-    
-    if wpm == 0 and accuracy == 0 and time_taken == 0 and correct_chars == 0 and incorrect_chars == 0:
-        return redirect('/')  
+    wpm = request.args.get('wpm', default=None, type=int)
+    accuracy = request.args.get('accuracy', default=None, type=int)
+    time_taken = request.args.get('time', default=None, type=int)
+    correct_chars = request.args.get('correctChars', default=None, type=int)
+    incorrect_chars = request.args.get('incorrectChars', default=None, type=int)
 
-    total_chars = correct_chars + incorrect_chars
-    if total_chars == 0:
+    if None in (wpm, accuracy, time_taken, correct_chars, incorrect_chars):
         return redirect('/')
 
-    if time_taken > 0:
-        expected_wpm = (correct_chars / 5) / (time_taken / 60)
-        if abs(wpm - expected_wpm) > 30:
-            return redirect('/')
+    if any(value < 0 for value in (wpm, accuracy, time_taken, correct_chars, incorrect_chars)):
+        return redirect('/')
 
-    calculated_accuracy = (correct_chars / total_chars) * 100
-    if abs(accuracy - calculated_accuracy) > 15:
-        return redirect('/')    
+    total_chars = correct_chars + incorrect_chars
+    if total_chars == 0 or time_taken <= 0:
+        return redirect('/')
+
+    expected_wpm = js_round(((correct_chars / 5) / time_taken) * 60)
+    if expected_wpm != wpm:
+        return redirect('/')
+
+    calculated_accuracy = js_round(correct_chars * 100 / (correct_chars + incorrect_chars))
+    if calculated_accuracy != accuracy:
+        return redirect('/')
 
     return render_template("results.html", 
                          wpm=wpm, 
