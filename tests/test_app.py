@@ -45,6 +45,16 @@ def test_results_ok(client):
     resp = client.get('/results?wpm=40&accuracy=95&time=30&correctChars=100&incorrectChars=5')
     assert resp.status_code == 200
 
+def test_results_with_missing_params(client):
+    """Test results page with missing parameters redirects to home page"""
+    resp = client.get('/results')
+    assert resp.status_code == 302  #redirect to '/'
+
+def test_results_with_invalid_params(client):
+    """Test results page with invalid parameters redirects to home page"""
+    resp = client.get('/results?wpm=invalid&accuracy=abc')
+    assert resp.status_code == 302  #redirect to '/'    
+
 def test_leaderboard_ok(client):
     """Test leaderboard POST and GET requests return 200 status code"""
     form = dict(
@@ -77,6 +87,11 @@ def test_contact_post_sends_email(monkeypatch, client):
     assert resp.status_code == 200
     assert called['args'] == ('John', 'john@example.com', '123', 'Hi there')
 
+def test_email_sender_initialization():
+    """Test EmailSender initialization has required attributes"""
+    from email_sender import EmailSender
+    sender = EmailSender()
+    assert hasattr(sender, 'today')    
 
 
 # LeaderboardManager tests
@@ -132,17 +147,6 @@ def test_leaderboard_manager_max_entries(temp_leaderboard_file):
     assert len(leaderboard) == 50  
 
 
-def test_results_with_missing_params(client):
-    """Test results page with missing parameters redirects to home page"""
-    resp = client.get('/results')
-    assert resp.status_code == 302  #redirect to '/'
-
-def test_results_with_invalid_params(client):
-    """Test results page with invalid parameters redirects to home page"""
-    resp = client.get('/results?wpm=invalid&accuracy=abc')
-    assert resp.status_code == 302  #redirect to '/'
-
-
 def test_leaderboard_post_missing_fields(client):
     """Test POST /leaderboard with missing required fields returns 400 status code"""
     form = dict(username='TestUser')  
@@ -161,11 +165,6 @@ def test_leaderboard_post_invalid_data_types(client):
     resp = client.post('/leaderboard', data=form)
     assert resp.status_code == 400
 
-def test_email_sender_initialization():
-    """Test EmailSender initialization has required attributes"""
-    from email_sender import EmailSender
-    sender = EmailSender()
-    assert hasattr(sender, 'today')
 
 def test_leaderboard_corrupted_file(temp_leaderboard_file):
     """Test handling of corrupted JSON file returns empty list"""
