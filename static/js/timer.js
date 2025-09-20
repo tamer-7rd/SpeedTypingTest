@@ -13,7 +13,7 @@ export function countdown(btn) {
     value -= 1;
     if (value <= 0) {
       clearInterval(timer);
-      const results = calculateResults(stats.typingTime);
+      const results = calculateResults();
       setTimeout(() => sendResultsToFlask(results, stats.typingTime), 1); // Small delay to ensure UI updates
     }
     btn.querySelector('.seconds').textContent = value;
@@ -22,7 +22,7 @@ export function countdown(btn) {
 
 // Calculates WPM (Words Per Minute) and accuracy percentage
 // Standard WPM calculation assumes average word length of 5 characters
-export function calculateResults (totalSeconds) {
+export function calculateResults() {
   let acc = 0;
   let wpm = 0;
 
@@ -34,6 +34,6 @@ export function calculateResults (totalSeconds) {
   // Calculate accuracy as percentage of correct characters
   acc = Math.round(stats.correctCount * 100 / (stats.correctCount + stats.incorrectCount));
   // Calculate WPM: (correct characters / 5) / time * 60
-  wpm = Math.round(((stats.correctCount / 5) / totalSeconds) * 60);
+  wpm = Math.round(((stats.correctCount / 5) / stats.typingTime) * 60);
   return {acc, wpm};
 }
