@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "eslint static/js/**/*.js",
+    "lint:fix": "eslint static/js/**/*.js --fix"
   },
   "repository": {
     "type": "git",
@@ -14,12 +16,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/tamer-7rd/SpeedTypingTest/issues"
   },
   "homepage": "https://github.com/tamer-7rd/SpeedTypingTest#readme",
   "devDependencies": {
+    "eslint": "^8.57.0",
     "jsdom": "^27.0.0",
     "vitest": "^3.2.4"
   }

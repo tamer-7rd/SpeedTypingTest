@@ -1,0 +1,57 @@
+name: Tests (Python + JS)
+
+# Trigger the workflow on pull requests and pushes to main branch
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+# Prevent multiple workflow runs for the same branch
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    # Test against multiple Python versions in parallel
+    strategy:
+      matrix:
+        python-version: [ "3.11", "3.12", "3.13" ]   # List of Python versions to test
+      fail-fast: false                       # Continue running other versions if one fails
+
+    steps:
+      # Checkout the repository code
+      - uses: actions/checkout@v4
+
+      # Set up Python environment with caching for faster builds
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      # Install Python dependencies
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # Run Python tests using pytest
+      - name: pytest
+        run: python -m pytest -q
+
+      # Set up Node.js environment with caching
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      # Install Node.js dependencies
+      - name: Install Node deps
+        run: npm ci
+
+      # Run JavaScript tests using vitest
+      - name: vitest
+        run: npm run test
