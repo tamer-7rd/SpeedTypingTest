@@ -102,3 +102,4 @@ Prefer Gmail App Passwords over personal passwords. In production, load secrets 
 
 **License**
 Not specified. Add a `LICENSE` file and reference here if required.
+ 
