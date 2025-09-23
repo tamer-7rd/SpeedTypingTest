@@ -12,6 +12,8 @@ SpeedTypingTest is a web application for measuring typing speed and accuracy. Th
 - Backend: `Flask`, `Jinja2`
 - Frontend: ES modules (vanilla JS), Bootstrap, custom CSS
 - Testing: `pytest` (Python), `vitest` + `jsdom` (JavaScript)
+- Code Quality: `flake8` (Python), `ESLint` (JavaScript)
+- CI/CD: `GitHub Actions`
 
 **Project Layout**
 - `main.py` — Flask entry point and route definitions
@@ -22,6 +24,10 @@ SpeedTypingTest is a web application for measuring typing speed and accuracy. Th
 - `static/assets/data.json` — pool of random paragraphs
 - `tests/test_app.py` — Flask integration tests
 - `static/js/__tests__/` — unit tests for frontend modules
+- `.github/workflows/` — GitHub Actions CI/CD configuration (`tests.yml`, `lint.yml`)
+- `.flake8` — Python linting configuration
+- `.eslintrc.json` — JavaScript linting configuration
+- `vitest.config.mjs` — Vitest testing configuration
 
 **Getting Started**
 1. Python environment
@@ -36,6 +42,16 @@ SpeedTypingTest is a web application for measuring typing speed and accuracy. Th
 - Python: `PYTHONPATH=. pytest tests/test_app.py`
 - JavaScript: `npm test`
   (Uses Vitest with jsdom.)
+
+**Code Quality & CI/CD**
+- **Linting**: 
+  - Python: `flake8 .` (configured in `.flake8`)
+  - JavaScript: `npm run lint` (ESLint configured in `.eslintrc.json`)
+- **GitHub Actions**: Automated testing and linting on every push and PR
+  - Tests run on Python 3.11, 3.12, 3.13
+  - Both Python (pytest) and JavaScript (vitest) tests executed
+  - Code quality checks with flake8 and ESLint
+- **Status badges**: Add to your README for build status visibility
 
 **Environment Variables**
 Create a `.env` file in the project root for SMTP credentials:
